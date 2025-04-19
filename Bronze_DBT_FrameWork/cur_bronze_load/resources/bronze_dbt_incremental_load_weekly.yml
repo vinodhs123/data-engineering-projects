@@ -1,0 +1,33 @@
+resources:
+  jobs:
+    gh_bronze_cur_load_weekly:
+      name: gh_bronze_cur_load_weekly
+      run_as:
+        - service_principal_name: "697d7e79-657a-439c-ba0a-13dd9c7cf997"
+      tags:
+        layer: bronze
+        domain: supplychain
+      schedule:
+        quartz_cron_expression: "0 0 18 ? * 2,3"
+        timezone_id: "Asia/Kolkata"
+        pause_status: ${var.schedule_status}
+      max_concurrent_runs: 0
+      email_notifications:
+        on_failure:
+          - ${var.failure_emails}
+      tasks:
+        - task_key: CUR_Bronze_Load
+
+          dbt_task:
+            project_directory: ../
+            profiles_directory: dbt_profiles/
+            commands:
+            - 'dbt run --target=${bundle.target} --select Sales_Forecasts_MII Sales_Forecasts_LATAM Sales_Forecasts_IND_CHN Sales_Forecasts_GB Sales_Forecasts_ASI Sales_Forecasts_ANZ ibp_Statistical_forecast_CEU ibp_resource ibp_previous_release_forecast_na ibp_previous_cycle_stat_fcst_na ibp_Latest_Release_Snap_MTH_2_CEU ibp_Latest_Release_Snap_MTH_1_CEU ibp_last_release_forecast_na ibp_last_release_forecast_ceu ibp_lag_6W_stat_fcst_na ibp_lag_6W_sourced_fcst_na ibp_Demand_Planning_Forecast_CEU ibp_Adjusted_Delivery_Quantity_CEU --threads 12  --vars "{run_mode: ${var.run_mode}, checkpoint_table: ${var.checkpoint_table}, ops_catalog: ${var.ops_catalog}, storage_account: ${var.storage_account}, container_1: ${var.container_1}, container_2: ${var.container_2}, target_catalog: ${var.target_catalog}, stg_catalog: ${var.stg_catalog}, sap_tbl_name: ${var.sap_tbl_name}}"'
+
+          environment_key: "server-less-compute"
+      environments:
+        - environment_key: "server-less-compute"
+          spec:
+            client: "1"
+            dependencies:
+              - dbt-databricks>=1.8.0,<2.0.0

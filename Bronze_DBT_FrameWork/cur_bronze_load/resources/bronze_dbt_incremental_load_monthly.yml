@@ -1,0 +1,33 @@
+resources:
+  jobs:
+    gh_bronze_cur_load_monthly:
+      name: gh_bronze_cur_load_monthly
+      run_as:
+        - service_principal_name: "697d7e79-657a-439c-ba0a-13dd9c7cf997"
+      tags:
+        layer: bronze
+        domain: supplychain
+      schedule:
+        quartz_cron_expression: "0 0 18 1,2 * ?"
+        timezone_id: "Asia/Kolkata"
+        pause_status: ${var.schedule_status}
+      max_concurrent_runs: 0
+      email_notifications:
+        on_failure:
+          - ${var.failure_emails}
+      tasks:
+        - task_key: CUR_Bronze_Load
+
+          dbt_task:
+            project_directory: ../
+            profiles_directory: dbt_profiles/
+            commands:
+            - 'dbt run --target=${bundle.target} --select ibp_potatoconsumptionplan_IND ibp_potatoconsumptionplan_SAF ibp_zstatforecast_SAF ibp_zstatforecast_IND ibp_Zsnapstatfcstmth1_SAF ibp_zsnapstatfcstmth1_ind ibp_zpromoadjustment_SAF ibp_zpromoadjustment_IND ibp_zdemandplanqty_SAF ibp_zdemandplanqty_IND ibp_Zconsolidatedfcst_SAF ibp_Zconsolidatedfcst_IND ibp_Zconsfcstmgmtoveride_SAF ibp_Zconsfcstmgmtoveride_IND ibp_Zconsensusqty_SAF ibp_Zconsensusqty_IND ibp_zconsadjustment_SAF ibp_zconsadjustment_IND ibp_adjustedproduction_ind ibp_adjustedproduction_saf ibp_plannedproduction_IND ibp_plannedproduction_SAF ibp_supply_ind ibp_supply_saf --threads 12  --vars "{run_mode: ${var.run_mode}, checkpoint_table: ${var.checkpoint_table}, ops_catalog: ${var.ops_catalog}, storage_account: ${var.storage_account}, container_1: ${var.container_1}, container_2: ${var.container_2}, target_catalog: ${var.target_catalog}, stg_catalog: ${var.stg_catalog}, sap_tbl_name: ${var.sap_tbl_name}}"'
+
+          environment_key: "server-less-compute"
+      environments:
+        - environment_key: "server-less-compute"
+          spec:
+            client: "1"
+            dependencies:
+              - dbt-databricks>=1.8.0,<2.0.0
