@@ -1,0 +1,72 @@
+
+resources:
+  jobs:
+    Bronze_Load_Asset_Bundle_wms_mfe:
+      name: Bronze-Load-Asset-Bundle-wms-mfe
+
+      # trigger:
+      #   periodic:
+      #     interval: 1
+      #     unit: DAYS
+
+      email_notifications:
+        on_failure:
+          - smitha.pm@mccain.ca
+
+
+
+      tasks:
+        - task_key: prepare_onboarding_json
+          job_cluster_key: job_cluster
+          notebook_task:
+            notebook_path: ../src/prepare_onboarding_json.ipynb
+            base_parameters: 
+              source_path_dev: '/mnt/landing/WMS/MFE/PARQUET/'
+              bronze_table_path_dev: '/mnt/dlt/supply_chain/bronze/' 
+              source_schema_path: 'dbfs:/FileStore/DDL/'
+              silver_table_path_dev: '/mnt/mccain/supply_chain/silver/'
+              filestore: 'dbfs:/FileStore/'
+              DDL_file_path: '/dbfs/FileStore/DDL/'
+              bronze_database: 'mfe'
+              bronze_data_quality_expectations_json_dev: 'dbfs:/FileStore/'
+              bronze_data_quality_expectations_json_prod: 'dbfs:/FileStore'
+              bronze_table_path_prod: '/mnt/dlt/supply_chain/bronze/'
+              bronze_quarantine_table_path_prod: '/mnt/dlt/supply_chain/bronze/'
+              bronze_quarantine_table_path_dev: '/mnt/dlt/supply_chain/bronze/'
+              silver_transformation_json_dev : "dbfs:/FileStore/"
+              volume_path: "/Volumes/mf_demo_d_bz/mfe/mfe/"
+              combined_json_file_name: "bronze_onboarding.json"
+        
+        - task_key: execute_onboarding
+          job_cluster_key: job_cluster
+          depends_on:
+            - task_key: prepare_onboarding_json
+          notebook_task: 
+            notebook_path: ../src/bronze_onboarding.ipynb
+            base_parameters: 
+              database: "mf_demo_d_bz.dlt"
+              onboarding_file_path: "/Volumes/mf_demo_d_bz/mfe/mfe/bronze_onboarding.json"
+              bronze_dataflowspec_table: "bronze_supplychain_dataflowspec"
+              silver_dataflowspec_table: "Silver_supplychain_dataflowspec"
+              silver_dataflowspec_path: "dbfs:/onboarding_tables_cdc/silver"
+              bronze_dataflowspec_path: "dbfs:/onboarding_tables_cdc/bronze"
+              overwrite: "False"
+              env: "dev"
+              version: "v1"
+              import_author: "Blackstraw"
+
+        - task_key: wms_mfe_dlt_pipeline
+          depends_on:
+            - task_key: execute_onboarding
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.wms_mfe_bronze_pipeline.id}
+      job_clusters:
+        - job_cluster_key: job_cluster
+          new_cluster:
+            spark_version: 14.3.x-scala2.12
+            node_type_id: Standard_D16a_v4
+            autoscale:
+                min_workers: 1
+                max_workers: 4             
+               
+

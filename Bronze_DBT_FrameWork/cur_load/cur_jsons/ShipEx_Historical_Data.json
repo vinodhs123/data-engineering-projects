@@ -1,0 +1,40 @@
+[
+    {
+       "data_flow_id":"ShipEx_Historical_Data",   
+       "data_flow_group":"supplyChaincur",
+       "source_system":"ADLS",
+       "source_format":"cloudFiles",
+       "source_details":{
+          "source_database":"cur",
+          "source_table":"ShipEx_Historical_Data",
+          "source_path_dev":"/mnt/landing/Curated/ShipEx_Historical_Data"
+       },
+       "bronze_database_dev":"mf_sap_d_bz.cur",
+       "bronze_table":"ShipEx_Historical_Data",
+        "bronze_reader_options": {
+          "cloudFiles.format": "csv",
+          "cloudFiles.inferColumnTypes": "false",
+          "delimiter": ",",
+          "header": "true"
+       },
+       "bronze_database_quarantine_dev":"mf_sap_d_bz.cur",
+       "bronze_quarantine_table":"ShipEx_Historical_Data_test_quarantine",
+       "silver_database_dev":"mf_sap_d_bz.cur",
+       "silver_table":"ShipEx_Historical_Data_test",
+       "silver_cdc_apply_changes":{
+          "keys":[
+             
+          ],
+          "sequence_by":"",
+          "scd_type":"",
+          "apply_as_deletes":"",
+          "except_column_list":[
+             "",
+             "",
+             ""
+          ]
+       },
+       "silver_table_path_dev":"/mnt/mccain/supply_chain/silver/ShipEx_Historical_Data",
+       "silver_transformation_json_dev":"dbfs:/FileStore/silver_transformations.json"
+    }
+ ]

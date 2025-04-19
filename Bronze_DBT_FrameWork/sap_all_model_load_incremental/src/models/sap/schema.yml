@@ -1,0 +1,23 @@
+version: 2
+
+models:
+  - name: adr6
+    columns:
+        - name: client
+        - name: addrnumber
+        - name: persnumber
+        - name: date_from
+        - name: consnumber
+        - name: flgdefault
+        - name: flg_nouse
+        - name: home_flag
+        - name: smtp_addr
+        - name: smtp_srch
+        - name: dft_receiv
+        - name: r3_user
+        - name: encode
+        - name: tnef
+        - name: valid_from
+        - name: valid_to
+        - name: tas_rp_insert_date
+        - name: tas_rp_opcode

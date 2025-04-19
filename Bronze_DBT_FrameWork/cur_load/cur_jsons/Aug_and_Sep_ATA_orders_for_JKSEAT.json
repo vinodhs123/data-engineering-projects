@@ -1,0 +1,40 @@
+[
+    {
+       "data_flow_id":"Aug_and_Sep_ATA_orders_for_JKSEAT",   
+       "data_flow_group":"supplyChaincur",
+       "source_system":"ADLS",
+       "source_format":"cloudFiles",
+       "source_details":{
+          "source_database":"cur",
+          "source_table":"Aug_and_Sep_ATA_orders_for_JKSEAT",
+          "source_path_dev":"/mnt/landing/Curated/Aug_and_Sep_ATA_orders_for_JKSEAT"
+       },
+       "bronze_database_dev":"mf_sap_d_bz.cur",
+       "bronze_table":"Aug_and_Sep_ATA_orders_for_JKSEAT",
+        "bronze_reader_options": {
+          "cloudFiles.format": "csv",
+          "cloudFiles.inferColumnTypes": "false",
+          "delimiter": ",",
+          "header": "true"
+       },
+       "bronze_database_quarantine_dev":"mf_sap_d_bz.cur",
+       "bronze_quarantine_table":"Aug_and_Sep_ATA_orders_for_JKSEAT_test_quarantine",
+       "silver_database_dev":"mf_sap_d_bz.cur",
+       "silver_table":"Aug_and_Sep_ATA_orders_for_JKSEAT_test",
+       "silver_cdc_apply_changes":{
+          "keys":[
+             
+          ],
+          "sequence_by":"",
+          "scd_type":"",
+          "apply_as_deletes":"",
+          "except_column_list":[
+             "",
+             "",
+             ""
+          ]
+       },
+       "silver_table_path_dev":"/mnt/mccain/supply_chain/silver/Aug_and_Sep_ATA_orders_for_JKSEAT",
+       "silver_transformation_json_dev":"dbfs:/FileStore/silver_transformations.json"
+    }
+ ]

@@ -1,0 +1,33 @@
+resources:
+  jobs:
+    gh_bronze_wms_load:
+      name: gh_bronze_wms_load
+      run_as:
+        - service_principal_name: "697d7e79-657a-439c-ba0a-13dd9c7cf997"
+      tags:
+        layer: bronze
+        domain: supplychain
+      schedule:
+        quartz_cron_expression: 0 0 12 * * ?
+        timezone_id: "Asia/Kolkata"
+        pause_status: ${var.schedule_status}
+      max_concurrent_runs: 0
+      email_notifications:
+        on_failure:
+          - ${var.failure_emails}
+      tasks:
+        - task_key: WMS_Bronze_Load
+
+          dbt_task:
+            project_directory: ../
+            profiles_directory: dbt_profiles/
+            commands:
+            - 'dbt run --target=${bundle.target} --threads 12  --vars "{run_mode: ${var.run_mode}, storage_account: ${var.storage_account}, container_1: ${var.container_1}, container_2: ${var.container_2}, incremental_location: ${var.incremental_location}}"'
+
+          environment_key: "server-less-compute"
+      environments:
+        - environment_key: "server-less-compute"
+          spec:
+            client: "1"
+            dependencies:
+              - dbt-databricks>=1.8.0,<2.0.0

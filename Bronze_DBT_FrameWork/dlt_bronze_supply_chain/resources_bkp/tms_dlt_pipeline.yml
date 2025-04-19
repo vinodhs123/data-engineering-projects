@@ -1,0 +1,21 @@
+
+resources:
+  pipelines:
+    tms_bronze_pipeline:
+      name: tms_bronze_pipeline
+      serverless: true
+      catalog: mf_demo_d_bz
+      target: tms
+      libraries:
+        - notebook:
+            path: ../src/dlt_pipeline_run.ipynb
+      configuration:
+        bundle.sourcePath: /Workspace/${workspace.file_path}/src
+        groupName: supplyChaintms
+        catalog: mf_demo_d_bz
+        target: tms
+        spark.bronze.dataflowspecTable: "mf_demo_d_bz.dlt.bronze_supplychain_dataflowspec"
+        spark.bronze.group: "supplyChaintms"
+
+        
+        

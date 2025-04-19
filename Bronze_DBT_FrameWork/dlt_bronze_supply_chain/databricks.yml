@@ -1,0 +1,179 @@
+
+bundle:
+  name: gh_edp_bronze_supply_chain
+
+include:
+  - resources/*.yml
+  - resources_metrics/*.yml
+
+variables:
+  environment:
+    description: string
+    default: ""
+  ecc_catalog:
+    description: string
+    default: ""
+  bronze_dataflowspec_table:
+    description: string
+    default: ""
+  silver_dataflowspec_table:
+    description: string
+    default: ""
+  ecc_schema:
+    description: string
+    default: ""
+  mfl_sap_catalog:
+    description: string
+    default: ""
+  mfl_sap_schema:
+    description: string
+    default: ""
+  mfl_wms_schema:
+    description: string
+    default: ""
+  mfl_tms_schema:
+    description: string
+    default: ""
+  mfl_ibp_schema:
+    description: string
+    default: ""
+  mfl_cur_schema:
+    description: string
+    default: ""
+  edp_ops_catalog:
+    description: string
+    default: ""
+  edp_ops_schema:
+    description: string
+    default: ""
+  tms_schema:
+    description: string
+    default: ""
+  wms_catalog:
+    description: string
+    default: ""
+  wms_arg_schema:
+    description: string
+    default: ""
+  wms_aus_schema:
+    description: string
+    default: ""
+  wms_can_schema:
+    description: string
+    default: ""
+  wms_col_schema:
+    description: string
+    default: ""
+  wms_mfe_schema:
+    description: string
+    default: ""
+  wms_nzl_schema:
+    description: string
+    default: ""
+  wms_uk_schema:
+    description: string
+    default: ""
+  wms_usa_schema:
+    description: string
+    default: ""
+  wms_pol_schema:
+    description: string
+    default: ""
+  cur_schema:
+    description: string
+    default: ""
+  ibp_schema:
+    description: string
+    default: ""
+
+targets:
+  dev:
+    mode: development
+    default: true
+    workspace:
+      host: https://adb-1178028260927946.6.azuredatabricks.net
+      root_path: /Users/sathesh.subramanium@mccain.ca/.bundle/${bundle.name}/${bundle.target}
+    permissions:
+      - user_name: sathesh.subramanium@mccain.ca
+        level: CAN_MANAGE
+    run_as:
+      - service_principal_name: "697d7e79-657a-439c-ba0a-13dd9c7cf997"
+    variables:
+      environment: "dev"
+      bronze_dataflowspec_table: "bronze_supplychain_dataflowspec"
+      silver_dataflowspec_table: "silver_supplychain_dataflowspec"
+      ecc_catalog: "mf_sap_d_bz"
+      ecc_schema: "ecc"
+      mfl_sap_catalog: "mfl_bronze_dev"
+      mfl_sap_schema: "sap"
+      mfl_wms_schema: "wms"
+      mfl_tms_schema: "tms"
+      mfl_ibp_schema: "ibp"
+      mfl_cur_schema: "cur"
+      edp_ops_catalog: "edp_ops_dev"
+      edp_ops_schema: "dlt"
+      tms_schema: "tms"
+      wms_catalog: "mf_wms_d_bz"
+      wms_arg_schema: "ARG"
+      wms_aus_schema: "AUS"
+      wms_can_schema: "CAN"
+      wms_col_schema: "COL"
+      wms_mfe_schema: "MFE"
+      wms_nzl_schema: "NZL"
+      wms_uk_schema: "UK"
+      wms_usa_schema: "USA"
+      wms_pol_schema: "POL"
+      cur_schema: "cur"
+      ibp_schema: "ibp"
+  qa:
+    mode: development
+    default: true
+    workspace:
+      host: https://adb-714412840471267.7.azuredatabricks.net
+      root_path: /Users/sathesh.subramanium@mccain.ca/.bundle/${bundle.name}/${bundle.target}
+    permissions:
+      - user_name: sathesh.subramanium@mccain.ca
+        level: CAN_MANAGE
+    run_as:
+      - service_principal_name: "697d7e79-657a-439c-ba0a-13dd9c7cf997"
+    variables:
+      environment: "qa"
+      bronze_dataflowspec_table: "bronze_supplychain_dataflowspec"
+      silver_dataflowspec_table: "silver_supplychain_dataflowspec"
+      ecc_catalog: "mf_sap_q_bz"
+      ecc_schema: "ecc"
+      mfl_sap_catalog: "mfl_bronze_qa"
+      mfl_sap_schema: "sap"
+      edp_ops_catalog: "edp_ops_qa"
+      edp_ops_schema: "dlt"
+      tms_schema: "tms"
+      wms_catalog: "mf_wms_q_bz"
+      wms_arg_schema: "arg"
+      wms_aus_schema: "aus"
+      wms_can_schema: "can"
+      wms_col_schema: "col"
+      wms_mfe_schema: "mfe"
+      wms_nzl_schema: "nzl"
+      wms_uk_schema: "uk"
+      wms_usa_schema: "usa"
+      wms_pol_schema: "pol"
+      cur_schema: "cur"
+      ibp_schema: "ibp"
+  prod:
+    mode: production
+    workspace:
+      host: https://adb-1178028260927946.6.azuredatabricks.net
+      root_path: /Users/sathesh.subramanium@mccain.ca/.bundle/${bundle.name}/${bundle.target}
+    permissions:
+      - user_name: sathesh.subramanium@mccain.ca
+        level: CAN_MANAGE
+    run_as:
+      - service_principal_name: "697d7e79-657a-439c-ba0a-13dd9c7cf997"
+    variables:
+      ecc_catalog:
+        description: string
+        default: "mf_sap_d_bz"
+      ecc_schema:
+        description: string
+        default: "ecc"
+

@@ -1,0 +1,6 @@
+Metadata-Version: 2.1
+Name: dlt-asset-bundle
+Version: 0.0.1+20241010.210514
+Summary: test package
+Author: sathesh.subramanium@mccain.ca
+Requires-Dist: setuptools

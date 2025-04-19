@@ -1,0 +1,124 @@
+# This file defines the structure of this project and how it is deployed
+# to production using Databricks Asset Bundles.
+# See https://docs.databricks.com/dev-tools/bundles/index.html for documentation.
+bundle:
+  name: gh_bronze_all_model_load_incremental
+
+include:
+  - resources/*.yml
+
+variables:
+  environment:
+    description: string
+    type: string
+    default: ""
+  run_mode:
+    description: string
+    type: string
+    default: ""
+  checkpoint_table:
+    description: string
+    type: string
+    default: ""
+  ops_catalog: 
+    description: string
+    type: string
+    default: ""
+  container:
+    description: string
+    type: string
+    default: ""
+  target_catalog:
+    description: string
+    type: string
+    default: ""
+  storage_account:
+    description: string
+    type: string
+    default: ""
+  bootstrap_storage_location:
+    description: string
+    type: string
+    default: ""
+  incremental_storage_location:
+    description: string
+    type: string
+    default: ""
+  failure_emails: 
+    description: string
+    type: string
+    default: ""
+
+# Deployment targets.
+# The default schema, catalog, etc. for dbt are defined in dbt_profiles/profiles.yml
+targets:
+  dev:
+    mode: production
+    default: true
+    workspace:
+      host: https://adb-1178028260927946.6.azuredatabricks.net
+    permissions:
+      - user_name: shibu.kt@mccain.ca
+        level: CAN_MANAGE
+      - user_name: sathesh.subramanium@mccain.ca
+        level: CAN_MANAGE
+      - group_name: AAD_EDP_MF_EDP_Data_Engineers_Dev_P
+        level: CAN_RUN
+    variables:
+      checkpoint_table: edp_ops_dev.edp_ops.checkpoint
+      ops_catalog: edp_ops_dev
+      target_catalog: mfl_bronze_dev
+      run_mode: incremental
+      container: landing
+      storage_account: mfgdasynapsedev01sa
+      bootstrap_storage_location: "Sap_Bronze_History"
+      incremental_storage_location: "HVR_PARQUET"
+      failure_emails: "shibu.kt@mccain.ca,sathesh.subramanium@mccain.ca,mohanraj.radhakrishnan@mccain.ca,raja.rajenderan@mccain.ca,magesh.kumar@mccain.ca,anitha.kg@mccain.ca"
+
+  qa:
+    mode: development
+    default: true
+    workspace:
+      host: https://adb-714412840471267.7.azuredatabricks.net
+    permissions:
+      - user_name: shibu.kt@mccain.ca
+        level: CAN_MANAGE
+      - user_name: sathesh.subramanium@mccain.ca
+        level: CAN_MANAGE
+      # - group_name: AD_EDP_MF_EDP_Data_Engineers_Qa_P3
+      #   level: CAN_RUN
+    variables:
+      run_mode: incremental
+      checkpoint_table: edp_ops_qa.edp_ops.checkpoint
+      ops_catalog: edp_ops_qa
+      target_catalog: mfl_bronze_uat
+      container: landing
+      storage_account: mfgdasynapseprod01sa
+      bootstrap_storage_location: "databricks_data/sap_repl/bronze"
+      incremental_storage_location: "HVR_PARQUET"
+      failure_emails: "shibu.kt@mccain.ca,sathesh.subramanium@mccain.ca,mohanraj.radhakrishnan@mccain.ca,raja.rajenderan@mccain.ca,magesh.kumar@mccain.ca,anitha.kg@mccain.ca"
+
+  prod:
+    mode: production
+    workspace:
+      host: https://adb-2848562239083431.11.azuredatabricks.net
+    permissions:
+      - user_name: shibu.kt@mccain.ca
+        level: CAN_MANAGE
+      - user_name: sathesh.subramanium@mccain.ca
+        level: CAN_MANAGE
+      - group_name: AAD_EDP_MF_EDP_Data_Engineers_Prod_P
+        level: CAN_VIEW
+      - group_name: AAD_EDP_Platform_Governance_Prod_P3
+        level: CAN_VIEW
+    variables:
+      environment: prod
+      run_mode: incremental
+      checkpoint_table : edp_ops_prod.edp_ops.checkpoint
+      ops_catalog: edp_ops_prod
+      container: landing
+      target_catalog: mfl_bronze_prod
+      storage_account: mfgdasynapseprod01sa
+      bootstrap_storage_location: "databricks_data/sap_repl/bronze"
+      incremental_storage_location: "HVR_PARQUET"
+      failure_emails: "shibu.kt@mccain.ca,sathesh.subramanium@mccain.ca,mohanraj.radhakrishnan@mccain.ca,raja.rajenderan@mccain.ca,magesh.kumar@mccain.ca,anitha.kg@mccain.ca"

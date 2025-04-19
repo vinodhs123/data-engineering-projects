@@ -1,0 +1,89 @@
+variables:
+  ecc_catalog: ${var.ecc_catalog}
+  ecc_schema: ${var.ecc_schema}
+  ecc_catalog: ${var.ecc_catalog}
+  ecc_schema: ${var.ecc_schema}
+  tms_schema: ${var.tms_schema}
+  wms_arg_schema: ${var.wms_arg_schema}
+  wms_aus_schema: ${var.wms_aus_schema}
+  wms_can_schema: ${var.wms_can_schema}
+  wms_col_schema: ${var.wms_col_schema}
+  wms_mfe_schema: ${var.wms_mfe_schema}
+  wms_nzl_schema: ${var.wms_nzl_schema}
+  wms_uk_schema: ${var.wms_uk_schema}
+  wms_usa_schema: ${var.wms_usa_schema}
+  wms_pol_schema: ${var.wms_pol_schema}
+  cur_schema: ${var.cur_schema}
+  ibp_schema: ${var.ibp_schema}
+
+resources:
+  jobs:
+    Bronze_Load_Asset_Bundle_ibp:
+      name: Bronze-Load-Asset-Bundle-ibp
+
+      # trigger:
+      #   periodic:
+      #     interval: 1
+      #     unit: DAYS
+
+      email_notifications:
+        on_failure:
+          - ssmitha.pm@mccain.ca
+
+
+
+      tasks:
+        - task_key: prepare_onboarding_json
+          job_cluster_key: job_cluster
+          notebook_task:
+            notebook_path: ../src/prepare_onboarding_json.ipynb
+            base_parameters: 
+              source_path_dev: '/mnt/landing/IBP_Blackstraw/'
+              bronze_table_path_dev: '/mnt/dlt/supply_chain/bronze/' 
+              source_schema_path: 'dbfs:/FileStore/DDL/'
+              silver_table_path_dev: '/mnt/mccain/supply_chain/silver/'
+              filestore: 'dbfs:/FileStore/'
+              DDL_file_path: '/dbfs/FileStore/DDL/'
+              bronze_database: ${var.ibp_schema}
+              bronze_data_quality_expectations_json_dev: 'dbfs:/FileStore/'
+              bronze_data_quality_expectations_json_prod: 'dbfs:/FileStore'
+              bronze_table_path_prod: '/mnt/dlt/supply_chain/bronze/'
+              bronze_quarantine_table_path_prod: '/mnt/dlt/supply_chain/bronze/'
+              bronze_quarantine_table_path_dev: '/mnt/dlt/supply_chain/bronze/'
+              silver_transformation_json_dev : "dbfs:/FileStore/"
+              volume_path: "/Volumes/mf_sap_d_bz/ibp/ibp/"
+              combined_json_file_name: "bronze_onboarding.json"
+        
+        - task_key: execute_onboarding
+          job_cluster_key: job_cluster
+          depends_on:
+            - task_key: prepare_onboarding_json
+          notebook_task: 
+            notebook_path: ../src/bronze_onboarding.ipynb
+            base_parameters: 
+              database: ${var.ecc_catalog}.dlt
+              onboarding_file_path: "/Volumes/mf_sap_q_bz/ibp/ibp/bronze_onboarding.json"
+              bronze_dataflowspec_table: "bronze_supplychain_dataflowspec"
+              silver_dataflowspec_table: "Silver_supplychain_dataflowspec"
+              silver_dataflowspec_path: "dbfs:/onboarding_tables_cdc/silver"
+              bronze_dataflowspec_path: "dbfs:/onboarding_tables_cdc/bronze"
+              overwrite: "False"
+              env: "dev"
+              version: "v1"
+              import_author: "Blackstraw"
+
+        - task_key: ibp_dlt_pipeline
+          depends_on:
+            - task_key: execute_onboarding
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.ibp_bronze_pipeline.id}
+      job_clusters:
+        - job_cluster_key: job_cluster
+          new_cluster:
+            spark_version: 14.3.x-scala2.12
+            node_type_id: Standard_D16a_v4
+            autoscale:
+                min_workers: 1
+                max_workers: 4             
+               
+

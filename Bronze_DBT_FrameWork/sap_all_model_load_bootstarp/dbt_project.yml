@@ -1,0 +1,27 @@
+name: 'gh_bronze_all_model_load_bootstrap'
+version: '1.0.0'
+config-version: 2
+profile: 'gh_bronze_all_model_load_bootstrap'
+model-paths: ["src/models"]
+analysis-paths: ["src/analyses"]
+test-paths: ["src/tests"]
+seed-paths: ["src/seeds"]
+macro-paths: ["src/macros"]
+snapshot-paths: ["src/snapshots"]
+
+clean-targets:         # directories to be removed by `dbt clean`
+  - "target"
+  - "dbt_packages"
+
+
+
+on-run-end: 
+  - "{{ log_dbt_results(results) }}"
+
+seeds:
+  gh_bronze_dbt_load_bootstrap:
+    frieght_model_seed:
+      enabled: true
+
+models:
+  gh_bronze_dbt_load_bootstrap:

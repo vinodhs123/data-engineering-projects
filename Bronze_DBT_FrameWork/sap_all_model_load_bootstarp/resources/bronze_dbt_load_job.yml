@@ -1,0 +1,39 @@
+
+# variables:
+#   run_mode: ${var.run_mode}
+#   checkpoint_table: ${var.checkpointtable}
+resources:
+  jobs:
+    gh_bronze_all_model_load_bootstrap:
+      name: gh_bronze_all_model_load_bootstrap
+      run_as:
+        - service_principal_name: "697d7e79-657a-439c-ba0a-13dd9c7cf997"
+      tags:
+        layer: bronze
+        domain: supplychain
+      # trigger:
+      #   periodic:
+      #     interval: 1
+      #     unit: DAYS
+
+      email_notifications:
+        on_failure:
+          - ${var.failure_emails}
+
+      tasks:
+        - task_key: bronze_sap_all_model_load_bootstrap
+
+          dbt_task:
+            project_directory: ../
+            profiles_directory: dbt_profiles/
+            commands:
+            - 'dbt run --target=${bundle.target} --threads 12 --vars "{run_mode: ${var.run_mode}, checkpoint_table: ${var.checkpoint_table}, ops_catalog: ${var.ops_catalog}, storage_account: ${var.storage_account}, container: ${var.container}, bootstrap_storage_location: ${var.bootstrap_storage_location}, incremental_storage_location: ${var.incremental_storage_location}}"'
+          environment_key: "server-less-compute"
+      environments:
+        - environment_key: "server-less-compute"
+          spec:
+            client: "1"
+            dependencies:
+              - dbt-databricks>=1.8.0,<2.0.0
+
+

@@ -1,0 +1,21 @@
+
+resources:
+  pipelines:
+    ibp_bronze_pipeline:
+      name: ibp_bronze_pipeline
+      serverless: true
+      catalog: mf_demo_d_bz
+      target: ibp
+      libraries:
+        - notebook:
+            path: ../src/dlt_pipeline_run.ipynb
+      configuration:
+        bundle.sourcePath: /Workspace/${workspace.file_path}/src
+        groupName: supplyChainibp
+        catalog: mf_demo_d_bz
+        target: ibp
+        spark.bronze.dataflowspecTable: "mf_demo_d_bz.dlt.bronze_supplychain_dataflowspec"
+        spark.bronze.group: "supplyChainibp"
+
+        
+        

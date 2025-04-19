@@ -1,0 +1,24 @@
+variables:
+  ecc_catalog: ${var.ecc_catalog}
+  cur_schema: ${var.cur_schema}
+
+resources:
+  pipelines:
+    cur_bronze_pipeline:
+      name: cur_bronze_pipeline
+      serverless: true
+      catalog: ${var.ecc_catalog}
+      target: ${var.cur_schema}
+      libraries:
+        - notebook:
+            path: ../src/dlt_pipeline_run.ipynb
+      configuration:
+        bundle.sourcePath: /Workspace/${workspace.file_path}/src
+        groupName: supplyChaincur
+        catalog: ${var.ecc_catalog}
+        target: ${var.cur_schema}
+        spark.bronze.dataflowspecTable: "mf_sap_d_bz.dlt.bronze_supplychain_dataflowspec"
+        spark.bronze.group: "supplyChaincur"
+
+        
+        

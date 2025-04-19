@@ -1,0 +1,38 @@
+[
+  {
+    "data_flow_id": "azr_supply_resprodlocsrc_apacsa_za",
+    "data_flow_group": "supplyChaincur",
+    "source_system": "ADLS",
+    "source_format": "cloudFiles",
+    "source_details": {
+      "source_database": "cur",
+      "source_table": "azr_supply_resprodlocsrc_apacsa_za",
+      "source_path_dev": "/mnt/landing/Curated/AZR_SUPPLY_RESPRODLOCSRC_APACSA_ZA"
+    },
+    "bronze_database_dev": "mf_sap_d_bz.cur",
+    "bronze_table": "azr_supply_resprodlocsrc_apacsa_za",
+    "bronze_reader_options": {
+      "cloudFiles.format": "csv",
+      "cloudFiles.inferColumnTypes": "false",
+      "delimiter": ",",
+      "header": "true"
+    },
+    "bronze_database_quarantine_dev": "mf_sap_d_bz.cur",
+    "bronze_quarantine_table": "azr_supply_resprodlocsrc_apacsa_za",
+    "silver_database_dev": "mf_sap_d_bz.cur",
+    "silver_table": "azr_supply_resprodlocsrc_apacsa_za",
+    "silver_cdc_apply_changes": {
+      "keys": [],
+      "sequence_by": "",
+      "scd_type": "",
+      "apply_as_deletes": "",
+      "except_column_list": [
+        "",
+        "",
+        ""
+      ]
+    },
+    "silver_table_path_dev": "/mnt/mccain/supply_chain/silver/azr_supply_resprodlocsrc_apacsa_za",
+    "silver_transformation_json_dev": "dbfs:/FileStore/silver_transformations.json"
+  }
+]

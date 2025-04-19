@@ -1,0 +1,28 @@
+name: 'gh_bronze_all_model_load_incremental'
+version: '1.0.0'
+config-version: 2
+
+profile: 'gh_bronze_all_model_load_incremental'
+
+
+model-paths: ["src/models"]
+analysis-paths: ["src/analyses"]
+test-paths: ["src/tests"]
+seed-paths: ["src/seeds"]
+macro-paths: ["src/macros"]
+snapshot-paths: ["src/snapshots"]
+
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+
+# vars:
+#   run_mode: "incremental"
+#   checkpoint_table: var('ops_catalog') ~ ".edp_ops.checkpoint"
+
+on-run-end: 
+  - "{{ log_dbt_results(results) }}"
+
+models:
+  bronze_dbt_load:

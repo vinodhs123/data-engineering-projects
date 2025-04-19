@@ -1,0 +1,38 @@
+[
+  {
+    "data_flow_id": "wh_unavailability_rpt",
+    "data_flow_group": "supplyChaincur",
+    "source_system": "ADLS",
+    "source_format": "cloudFiles",
+    "source_details": {
+      "source_database": "cur",
+      "source_table": "wh_unavailability_rpt",
+      "source_path_dev": "/mnt/landing/Curated/WH_UNAVAILABILITY_RPT"
+    },
+    "bronze_database_dev": "mf_sap_d_bz.cur",
+    "bronze_table": "wh_unavailability_rpt",
+    "bronze_reader_options": {
+      "cloudFiles.format": "csv",
+      "cloudFiles.inferColumnTypes": "false",
+      "delimiter": "|",
+      "header": "true"
+    },
+    "bronze_database_quarantine_dev": "mf_sap_d_bz.cur",
+    "bronze_quarantine_table": "wh_unavailability_rpt_test_quarantine",
+    "silver_database_dev": "mf_sap_d_bz.cur",
+    "silver_table": "wh_unavailability_rpt_test",
+    "silver_cdc_apply_changes": {
+      "keys": [],
+      "sequence_by": "",
+      "scd_type": "",
+      "apply_as_deletes": "",
+      "except_column_list": [
+        "",
+        "",
+        ""
+      ]
+    },
+    "silver_table_path_dev": "/mnt/mccain/supply_chain/silver/wh_unavailability_rpt",
+    "silver_transformation_json_dev": "dbfs:/FileStore/silver_transformations.json"
+  }
+]

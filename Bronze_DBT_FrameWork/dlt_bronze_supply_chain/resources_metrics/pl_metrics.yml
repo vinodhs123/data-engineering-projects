@@ -1,0 +1,24 @@
+resources:
+  jobs:
+    pl_Silver_metrics:
+      name: pl_Silver_metrics
+      description: metrics - silver table load
+      tags:
+        name: pl_Silver_metrics
+        domain: supplychain
+      # trigger:
+      #   periodic:
+      #     interval: 1
+      #     unit: HOURS
+      email_notifications:
+        on_failure:
+        - mohammed.sameeruddin@mccain.ca
+        - smitha.pm@mccain.ca
+      tasks:
+      - task_key: pl_Silver_metrics
+        notebook_task:
+          notebook_path: ../src/silver_metrics/pl_collect_metrics.ipynb
+          base_parameters:
+            jobName: '{{job.name}}'
+            pipeline_name: pl_Silver_metrics
+            metrics_tbl_name: 'workflow_audit_log_info'

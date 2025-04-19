@@ -1,0 +1,53 @@
+{% set container_value1 = var('container_1') %}
+{% set storage_account_value = var('storage_account') %}
+{% set incremental_location_value = var('incremental_location') %}
+
+{{ load_wms_incremental(
+    source_path="abfss://" ~ container_value1 ~ "@" ~ storage_account_value ~ ".dfs.core.windows.net/" ~ incremental_location_value ~ "/ARG/WMS_WFLOD_ARG_550_parquet",
+    all_columns = [
+        {"name": "LDWHS", "data_type": "STRING"},
+        {"name": "LDASLE", "data_type": "STRING"},
+        {"name": "LDBAY", "data_type": "STRING"},
+        {"name": "LDLVL", "data_type": "STRING"},
+        {"name": "LDLCPL", "data_type": "DECIMAL(20,0)"},
+        {"name": "LDOLCP", "data_type": "DECIMAL(20,0)"},
+        {"name": "LDITEM", "data_type": "STRING"},
+        {"name": "LDVRSN", "data_type": "STRING"},
+        {"name": "LDLOT", "data_type": "STRING"},
+        {"name": "LDISTS", "data_type": "STRING"},
+        {"name": "LDLZON", "data_type": "STRING"},
+        {"name": "LDAZON", "data_type": "STRING"},
+        {"name": "LDLTYP", "data_type": "STRING"},
+        {"name": "LDAGDT", "data_type": "DECIMAL(7,0)"},
+        {"name": "LDAGTM", "data_type": "DECIMAL(7,0)"},
+        {"name": "LDALSQ", "data_type": "DECIMAL(5,0)"},
+        {"name": "LDOPLQ", "data_type": "DECIMAL(13,0)"},
+        {"name": "LDOHQ", "data_type": "DECIMAL(13,0)"},
+        {"name": "LDITQ", "data_type": "DECIMAL(13,0)"},
+        {"name": "LDALQ", "data_type": "DECIMAL(13,0)"},
+        {"name": "LDAVLQ", "data_type": "DECIMAL(13,0)"},
+        {"name": "LDAALQ", "data_type": "DECIMAL(13,0)"},
+        {"name": "LDPCCA", "data_type": "DECIMAL(5,0)"},
+        {"name": "LDCLEN", "data_type": "DECIMAL(13,5)"},
+        {"name": "LDCWID", "data_type": "DECIMAL(13,5)"},
+        {"name": "LDCHGT", "data_type": "DECIMAL(13,5)"},
+        {"name": "LDCWGT", "data_type": "DECIMAL(13,5)"},
+        {"name": "LDCAPL", "data_type": "DECIMAL(5,0)"},
+        {"name": "LDPLEN", "data_type": "DECIMAL(13,5)"},
+        {"name": "LDPWID", "data_type": "DECIMAL(13,5)"},
+        {"name": "LDPHGT", "data_type": "DECIMAL(13,5)"},
+        {"name": "LDPWGT", "data_type": "DECIMAL(13,5)"},
+        {"name": "LDLSTS", "data_type": "STRING"},
+        {"name": "LDPCWT", "data_type": "DECIMAL(13,5)"},
+        {"name": "LDPCLN", "data_type": "DECIMAL(13,5)"},
+        {"name": "LDPCWD", "data_type": "DECIMAL(13,5)"},
+        {"name": "LDPCHT", "data_type": "DECIMAL(13,5)"},
+        {"name": "LDCSLY", "data_type": "DECIMAL(5,0)"},
+        {"name": "LDWZON", "data_type": "STRING"},
+        {"name": "LDDZON", "data_type": "STRING"},
+        {"name": "LDPITM", "data_type": "STRING"},
+        {"name": "LDPVSN", "data_type": "STRING"},
+        {"name": "LDCLCP", "data_type": "DECIMAL(20,0)"},
+        {"name": "LDCTYP", "data_type": "STRING"}
+    ]
+) }}

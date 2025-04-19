@@ -1,0 +1,77 @@
+variables:
+  mfl_sap_catalog: ${var.mfl_sap_catalog}
+  mfl_cur_schema: ${var.mfl_cur_schema}
+  edp_ops_catalog: ${var.edp_ops_catalog}
+  edp_ops_schema: ${var.edp_ops_schema}
+  environment: ${var.environment}
+  #node_type_id: ${var.node_type_id}
+
+  
+resources:
+  jobs:
+    CUR_Bronze_Load_Asset_Bundle:
+      name: CUR-Bronze-Load-Asset-Bundle
+
+      email_notifications:
+        on_failure:
+          - sathesh.subramanium@mccain.ca
+      schedule:
+        quartz_cron_expression: "0 30 0 * * ? *"   # Runs the job at 6:00 AM IST (00:30 UTC)
+        timezone_id: "Asia/Kolkata"        # Optional: set the timezone if required
+        pause_status: "UNPAUSED" # Ensure the schedule is active
+      tasks:
+        - task_key: prepare_onboarding_json
+          job_cluster_key: job_cluster
+          notebook_task:
+            notebook_path: ../src/prepare_onboarding_json.ipynb
+            base_parameters: 
+              source_path_dev: /Volumes/${var.edp_ops_catalog}/edp_ops/synapse_landing/Curated/
+              bronze_table_path_dev: '/mnt/dlt/supply_chain/bronze/'
+              source_schema_path: 'dbfs:/FileStore/DDL/'
+              silver_table_path_dev: '/mnt/mccain/supply_chain/silver/'
+              filestore: 'dbfs:/FileStore/'
+              DDL_file_path: '/dbfs/FileStore/DDL/'
+              bronze_database: ${var.mfl_cur_schema}
+              bronze_data_quality_expectations_json_dev: 'dbfs:/FileStore/'
+              bronze_data_quality_expectations_json_prod: 'dbfs:/FileStore'
+              bronze_table_path_prod: '/mnt/dlt/supply_chain/bronze/'
+              bronze_quarantine_table_path_prod: '/mnt/dlt/supply_chain/bronze/'
+              bronze_quarantine_table_path_dev: '/mnt/dlt/supply_chain/bronze/'
+              silver_transformation_json_dev : "dbfs:/FileStore/"
+              volume_path: /Volumes/${var.edp_ops_catalog}/edp_ops/bronze_vol/
+              combined_json_file_name: ${var.mfl_cur_schema}_bronze_onboarding.json
+              environment: ${var.environment}
+        
+        - task_key: execute_onboarding
+          job_cluster_key: job_cluster
+          depends_on:
+            - task_key: prepare_onboarding_json
+          notebook_task: 
+            notebook_path: ../src/bronze_onboarding.ipynb
+            base_parameters: 
+              database: ${var.edp_ops_catalog}.${var.edp_ops_schema}
+              onboarding_file_path: /Volumes/${var.edp_ops_catalog}/edp_ops/bronze_vol/${var.mfl_cur_schema}_bronze_onboarding.json
+              bronze_dataflowspec_table: ${var.bronze_dataflowspec_table}
+              silver_dataflowspec_table: ${var.silver_dataflowspec_table}
+              silver_dataflowspec_path: "dbfs:/onboarding_tables_cdc/silver"
+              bronze_dataflowspec_path: "dbfs:/onboarding_tables_cdc/bronze"
+              overwrite: "True"
+              env: ${var.environment}
+              version: "v1"
+              import_author: "Blackstraw"
+
+        - task_key: cur_dlt_pipeline
+          depends_on:
+            - task_key: execute_onboarding
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.cur_bronze_pipeline.id}
+      job_clusters:
+        - job_cluster_key: job_cluster
+          new_cluster:
+            spark_version: 14.3.x-scala2.12
+            node_type_id: Standard_D8a_v4
+            autoscale:
+                min_workers: 1
+                max_workers: 4             
+               
+

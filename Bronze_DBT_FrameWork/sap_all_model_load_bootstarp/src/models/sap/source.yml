@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: sap
+    tables:
+      - name: adr6
+      - name: ce1mfl1
+    

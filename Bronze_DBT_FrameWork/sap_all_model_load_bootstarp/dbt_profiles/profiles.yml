@@ -1,0 +1,41 @@
+
+# This file defines dbt profiles for deployed dbt jobs.
+gh_bronze_all_model_load_bootstrap:
+  #  target: dev # default target
+   outputs:
+    dev:
+      type: databricks
+      method: https
+      catalog: mfl_bronze_dev
+      schema: "sap"
+      http_path: /sql/1.0/warehouses/bfa345ed614e62e1
+      endpoint_type: driver
+      host: "{{ env_var('DBT_HOST') }}"
+      token: "{{ env_var('DBT_ACCESS_TOKEN') }}"
+      run_mode: incremental
+      ops_catalog: edp_ops_dev
+      checkpoint_table: edp_ops_dev.edp_ops.checkpoint
+
+    qa:
+      type: databricks
+      method: https
+      catalog: mfl_bronze_qa
+      schema: sap
+      http_path: /sql/1.0/warehouses/4ae1574eeff649ea
+      endpoint_type: driver
+      host: "{{ env_var('DBT_HOST') }}"
+      token: "{{ env_var('DBT_ACCESS_TOKEN') }}"
+      run_mode: incremental
+      checkpoint_table: edp_ops_dev.edp_ops.checkpoint
+
+    prod:
+      type: databricks
+      method: https
+      catalog: mfl_bronze_prod
+      schema: sap
+      http_path: /sql/1.0/warehouses/13a69d97a646b492
+      endpoint_type: driver
+      host: "{{ env_var('DBT_HOST') }}"
+      token: "{{ env_var('DBT_ACCESS_TOKEN') }}"
+      run_mode: incremental
+      checkpoint_table: edp_ops_prod.edp_ops.checkpoint

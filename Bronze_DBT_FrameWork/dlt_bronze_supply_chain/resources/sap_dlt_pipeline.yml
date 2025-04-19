@@ -1,0 +1,30 @@
+variables:
+  mfl_sap_catalog: ${var.mfl_sap_catalog}
+  mfl_sap_schema: ${var.mfl_sap_schema}
+  bronze_dataflowspec_table : ${var.bronze_dataflowspec_table}
+  silver_dataflowspec_table: ${var.silver_dataflowspec_table}
+
+
+resources:
+  pipelines:
+    sap_bronze_pipeline:
+      name: ${var.mfl_sap_schema}_bronze_pipeline
+      serverless: true
+      catalog: ${var.mfl_sap_catalog}
+      target: ${var.mfl_sap_schema}
+      # dataflowspec_table: ${var.edp_ops_catalog}.${var.edp_ops_schema}.${var.bronze_dataflowspec_table}
+      # group: supplyChain
+      libraries:
+        - notebook:
+            path: ../src/dlt_pipeline_run.ipynb
+      configuration:
+        bundle.sourcePath: /Workspace/${workspace.file_path}/src
+        # groupName: supplyChain
+        #        catalog: ${var.mfl_sap_catalog}
+        #        target: ${var.mfl_sap_schema}
+
+        spark.bronze.dataflowspecTable: ${var.edp_ops_catalog}.${var.edp_ops_schema}.${var.bronze_dataflowspec_table}
+        spark.bronze.group: supplyChain
+
+
+        

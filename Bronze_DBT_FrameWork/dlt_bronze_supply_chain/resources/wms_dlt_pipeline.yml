@@ -1,0 +1,24 @@
+variables:
+  mfl_sap_catalog: ${var.mfl_sap_catalog}
+  mfl_wms_schema: ${var.mfl_wms_schema}
+  bronze_dataflowspec_table : ${var.bronze_dataflowspec_table}
+  silver_dataflowspec_table: ${var.silver_dataflowspec_table}
+
+
+resources:
+  pipelines:
+    wms_bronze_pipeline:
+      name: ${var.mfl_wms_schema}_bronze_pipeline
+      serverless: true
+      catalog: ${var.mfl_sap_catalog}
+      target: ${var.mfl_wms_schema}
+      libraries:
+        - notebook:
+            path: ../src/dlt_pipeline_run.ipynb
+      configuration:
+        bundle.sourcePath: /Workspace/${workspace.file_path}/src
+        spark.bronze.dataflowspecTable: ${var.edp_ops_catalog}.${var.edp_ops_schema}.${var.bronze_dataflowspec_table}
+        spark.bronze.group: supplychain_${var.mfl_wms_schema}
+
+
+        

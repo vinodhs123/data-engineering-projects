@@ -1,0 +1,21 @@
+variables:
+  ecc_catalog: ${var.ecc_catalog}
+  ecc_schema: ${var.ecc_schema}
+
+resources:
+  pipelines:
+    bronze_pipeline_commercial:
+      name: bronze_pipeline_commercial
+      serverless: true
+      catalog: ${var.ecc_catalog}
+      target: ${var.ecc_schema}
+      libraries:
+        - notebook:
+            path: ../src/dlt_pipeline.ipynb
+      configuration:
+        bundle.sourcePath: /Workspace/${workspace.file_path}/src
+        groupName: Commercial
+        catalog: ${var.ecc_catalog}
+        target: ${var.ecc_schema}
+        
+        

@@ -1,0 +1,21 @@
+
+resources:
+  pipelines:
+    wms_usa_bronze_pipeline:
+      name: wms_usa_bronze_pipeline
+      serverless: true
+      catalog: mf_demo_d_bz
+      target: usa
+      libraries:
+        - notebook:
+            path: ../src/dlt_pipeline_run.ipynb
+      configuration:
+        bundle.sourcePath: /Workspace/${workspace.file_path}/src
+        groupName: supplychain_wms
+        catalog: mf_demo_d_bz
+        target: usa
+        spark.bronze.dataflowspecTable: "mf_demo_d_bz.dlt.bronze_supplychain_dataflowspec"
+        spark.bronze.group: "supplychain_wms"
+
+        
+        

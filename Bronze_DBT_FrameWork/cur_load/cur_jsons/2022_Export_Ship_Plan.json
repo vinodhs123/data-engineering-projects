@@ -1,0 +1,41 @@
+[
+    {
+       "data_flow_id":"2022_Export_Ship_Plan",   
+       "data_flow_group":"supplyChaincur",
+       "source_system":"ADLS",
+       "source_format":"cloudFiles",
+       "source_details":{
+          "source_database":"cur",
+          "source_table":"2022_Export_Ship_Plan",
+          "source_path_dev":"/mnt/landing/Curated/2022_Export_Ship_Plan"
+       },
+       "bronze_database_dev":"mf_sap_d_bz.cur",
+       "bronze_table":"2022_Export_Ship_Plan",
+        "bronze_reader_options": {
+          "cloudFiles.format": "csv",
+          "cloudFiles.inferColumnTypes": "false",
+          "delimiter": ",",
+          "header": "true"
+       },
+       "bronze_database_quarantine_dev":"mf_sap_d_bz.cur",
+       "bronze_quarantine_table":"2022_Export_Ship_Plan_test_quarantine",
+       "silver_database_dev":"mf_sap_d_bz.cur",
+       "silver_table":"2022_Export_Ship_Plan_test",
+       "silver_cdc_apply_changes":{
+          "keys":[
+             
+          ],
+          "sequence_by":"",
+          "scd_type":"",
+          "apply_as_deletes":"",
+          "except_column_list":[
+             "",
+             "",
+             ""
+          ]
+       },
+       "silver_table_path_dev":"/mnt/mccain/supply_chain/silver/2022_Export_Ship_Plan",
+       "silver_transformation_json_dev":"dbfs:/FileStore/silver_transformations.json"
+    }
+ ]
+

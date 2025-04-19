@@ -1,0 +1,38 @@
+[
+  {
+    "data_flow_id": "ctrl_sales_org_major_customer",
+    "data_flow_group": "supplyChaincur",
+    "source_system": "ADLS",
+    "source_format": "cloudFiles",
+    "source_details": {
+      "source_database": "cur",
+      "source_table": "ctrl_sales_org_major_customer",
+      "source_path_dev": "/mnt/landing/Curated/ctrl_sales_org_major_customer"
+    },
+    "bronze_database_dev": "mf_sap_d_bz.cur",
+    "bronze_table": "ctrl_sales_org_major_customer",
+    "bronze_reader_options": {
+      "cloudFiles.format": "csv",
+      "cloudFiles.inferColumnTypes": "false",
+      "delimiter": ",",
+      "header": "true"
+    },
+    "bronze_database_quarantine_dev": "mf_sap_d_bz.cur",
+    "bronze_quarantine_table": "ctrl_sales_org_major_customer_test_quarantine",
+    "silver_database_dev": "mf_sap_d_bz.cur",
+    "silver_table": "ctrl_sales_org_major_customer_test",
+    "silver_cdc_apply_changes": {
+      "keys": [],
+      "sequence_by": "",
+      "scd_type": "",
+      "apply_as_deletes": "",
+      "except_column_list": [
+        "",
+        "",
+        ""
+      ]
+    },
+    "silver_table_path_dev": "/mnt/mccain/supply_chain/silver/ctrl_sales_org_major_customer",
+    "silver_transformation_json_dev": "dbfs:/FileStore/silver_transformations.json"
+  }
+]

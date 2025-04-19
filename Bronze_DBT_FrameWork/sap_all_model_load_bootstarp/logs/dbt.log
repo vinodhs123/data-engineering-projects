@@ -1,0 +1,26 @@
+[0m13:29:14.665989 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x110743e80>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x1116931c0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x111692d40>]}
+
+
+============================== 13:29:14.673433 | ddafb900-0282-4dcf-94e6-4a2f07263f97 ==============================
+[0m13:29:14.673433 [info ] [MainThread]: Running with dbt=1.9.1
+[0m13:29:14.674183 [debug] [MainThread]: running dbt with arguments {'printer_width': '80', 'indirect_selection': 'eager', 'write_json': 'True', 'log_cache_events': 'False', 'partial_parse': 'True', 'cache_selected_only': 'False', 'profiles_dir': '/Users/sathesh.subramani/.dbt', 'debug': 'False', 'version_check': 'True', 'log_path': '/Users/sathesh.subramani/Documents/cl-mccain/edp/DAIA-Enterprise-Data-Platform/assetbundle/bronze/freight_load_bootstrap/logs', 'fail_fast': 'False', 'warn_error': 'None', 'use_colors': 'True', 'use_experimental_parser': 'False', 'empty': 'None', 'quiet': 'False', 'no_print': 'None', 'log_format': 'default', 'introspect': 'True', 'warn_error_options': 'WarnErrorOptions(include=[], exclude=[])', 'invocation_command': 'dbt clean', 'target_path': 'None', 'static_parser': 'True', 'send_anonymous_usage_stats': 'True'}
+[0m13:29:14.886075 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'project_id', 'label': 'ddafb900-0282-4dcf-94e6-4a2f07263f97', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x111692590>]}
+[0m13:29:14.965518 [debug] [MainThread]: Resource report: {"command_name": "clean", "command_success": true, "command_wall_clock_time": 0.45254916, "process_in_blocks": "0", "process_kernel_time": 0.43503, "process_mem_max_rss": "90431488", "process_out_blocks": "0", "process_user_time": 1.671334}
+[0m13:29:14.966394 [debug] [MainThread]: Command `dbt clean` succeeded at 13:29:14.966262 after 0.45 seconds
+[0m13:29:14.966959 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x110743e80>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x111692d10>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x111695090>]}
+[0m13:29:14.967440 [debug] [MainThread]: Flushing usage events
+[0m13:29:16.206265 [debug] [MainThread]: An error was encountered while trying to flush usage events
+[0m16:47:27.604762 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'start', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x1101dbeb0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x1111231c0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x111122d40>]}
+
+
+============================== 16:47:27.611676 | ad009154-4eef-4a29-b357-0c8f1543981b ==============================
+[0m16:47:27.611676 [info ] [MainThread]: Running with dbt=1.9.1
+[0m16:47:27.612608 [debug] [MainThread]: running dbt with arguments {'printer_width': '80', 'indirect_selection': 'eager', 'write_json': 'True', 'log_cache_events': 'False', 'partial_parse': 'True', 'cache_selected_only': 'False', 'profiles_dir': '/Users/sathesh.subramani/.dbt', 'debug': 'False', 'fail_fast': 'False', 'log_path': '/Users/sathesh.subramani/Documents/cl-mccain/edp/DAIA-Enterprise-Data-Platform/assetbundle/bronze/sap_freight_load_bootstrap/logs', 'warn_error': 'None', 'version_check': 'True', 'use_colors': 'True', 'use_experimental_parser': 'False', 'empty': 'None', 'quiet': 'False', 'no_print': 'None', 'log_format': 'default', 'introspect': 'True', 'invocation_command': 'dbt debug --config-dir', 'warn_error_options': 'WarnErrorOptions(include=[], exclude=[])', 'target_path': 'None', 'static_parser': 'True', 'send_anonymous_usage_stats': 'True'}
+[0m16:47:27.637430 [info ] [MainThread]: To view your profiles.yml file, run:
+
+open /Users/sathesh.subramani/.dbt
+[0m16:47:27.672765 [debug] [MainThread]: Resource report: {"command_name": "debug", "command_success": true, "command_wall_clock_time": 0.2044364, "process_in_blocks": "0", "process_kernel_time": 0.419518, "process_mem_max_rss": "88096768", "process_out_blocks": "0", "process_user_time": 1.513974}
+[0m16:47:27.673985 [debug] [MainThread]: Command `dbt debug` succeeded at 16:47:27.673828 after 0.21 seconds
+[0m16:47:27.674506 [debug] [MainThread]: Sending event: {'category': 'dbt', 'action': 'invocation', 'label': 'end', 'context': [<snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x1101dbeb0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x1111231c0>, <snowplow_tracker.self_describing_json.SelfDescribingJson object at 0x111126e00>]}
+[0m16:47:27.674942 [debug] [MainThread]: Flushing usage events
+[0m16:47:28.847121 [debug] [MainThread]: An error was encountered while trying to flush usage events

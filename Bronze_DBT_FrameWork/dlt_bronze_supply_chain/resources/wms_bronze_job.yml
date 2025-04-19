@@ -1,0 +1,387 @@
+variables:
+  mfl_sap_catalog: ${var.mfl_sap_catalog}
+  mfl_wms_schema: ${var.mfl_wms_schema}
+  edp_ops_catalog: ${var.edp_ops_catalog}
+  edp_ops_schema: ${var.edp_ops_schema}
+  environment: ${var.environment}
+
+  wms_arg_schema: ${var.wms_arg_schema}
+  wms_aus_schema: ${var.wms_aus_schema}
+  wms_can_schema: ${var.wms_can_schema}
+  wms_col_schema: ${var.wms_col_schema}
+  wms_mfe_schema: ${var.wms_mfe_schema}
+  wms_nzl_schema: ${var.wms_nzl_schema}
+  wms_uk_schema: ${var.wms_uk_schema}
+  wms_usa_schema: ${var.wms_usa_schema}
+  wms_pol_schema: ${var.wms_pol_schema}
+
+resources:
+  jobs:
+    WMS_Bronze_Load_Asset_Bundle:
+      name: WMS-Bronze-Load-Asset-Bundle
+
+      email_notifications:
+        on_failure:
+          - sathesh.subramanium@mccain.ca
+
+      tasks:
+        - task_key: prepare_onboarding_json_${var.wms_arg_schema}
+          job_cluster_key: job_cluster
+          notebook_task:
+            notebook_path: ../src/prepare_onboarding_json_wms_load.ipynb
+            base_parameters:
+              source_path_dev: /mnt/landing/WMS/${var.wms_arg_schema}/PARQUET/
+              bronze_table_path_dev: '/mnt/dlt/supply_chain/bronze/'
+              source_schema_path: 'dbfs:/FileStore/DDL/'
+              silver_table_path_dev: '/mnt/mccain/supply_chain/silver/'
+              filestore: 'dbfs:/FileStore/'
+              DDL_file_path: '/dbfs/FileStore/DDL/'
+              bronze_database: ${var.wms_arg_schema}
+              bronze_data_quality_expectations_json_dev: 'dbfs:/FileStore/'
+              bronze_data_quality_expectations_json_prod: 'dbfs:/FileStore'
+              bronze_table_path_prod: '/mnt/dlt/supply_chain/bronze/'
+              bronze_quarantine_table_path_prod: '/mnt/dlt/supply_chain/bronze/'
+              bronze_quarantine_table_path_dev: '/mnt/dlt/supply_chain/bronze/'
+              silver_transformation_json_dev : "dbfs:/FileStore/"
+              volume_path: /Volumes/${var.edp_ops_catalog}/edp_ops/bronze_vol/${var.mfl_wms_schema}/
+              combined_json_file_name: all_countries/arg_bronze_onboarding.json
+
+        - task_key: prepare_ddl_wms_${var.wms_arg_schema}
+          job_cluster_key: job_cluster
+          depends_on:
+            - task_key: prepare_onboarding_json_${var.wms_arg_schema}
+          notebook_task:
+              notebook_path: ../src/edp_bronze_json_ddl_wms.ipynb
+              base_parameters:
+                directory: /Volumes/edp_ops_dev/edp_ops/bronze_vol/wms/${var.wms_arg_schema}
+                source_path_dev: /mnt/landing/WMS/${var.wms_arg_schema}/PARQUET/
+                DDL_file_path: '/dbfs/FileStore/DDL/'
+
+        - task_key: prepare_onboarding_json_${var.wms_aus_schema}
+          job_cluster_key: job_cluster
+          depends_on:
+            - task_key: prepare_onboarding_json_${var.wms_arg_schema}
+          notebook_task:
+            notebook_path: ../src/prepare_onboarding_json_wms_load.ipynb
+            base_parameters:
+              source_path_dev: /mnt/landing/WMS/${var.wms_aus_schema}/PARQUET/
+              bronze_table_path_dev: '/mnt/dlt/supply_chain/bronze/'
+              source_schema_path: 'dbfs:/FileStore/DDL/'
+              silver_table_path_dev: '/mnt/mccain/supply_chain/silver/'
+              filestore: 'dbfs:/FileStore/'
+              DDL_file_path: '/dbfs/FileStore/DDL/'
+              bronze_database: ${var.wms_aus_schema}
+              bronze_data_quality_expectations_json_dev: 'dbfs:/FileStore/'
+              bronze_data_quality_expectations_json_prod: 'dbfs:/FileStore'
+              bronze_table_path_prod: '/mnt/dlt/supply_chain/bronze/'
+              bronze_quarantine_table_path_prod: '/mnt/dlt/supply_chain/bronze/'
+              bronze_quarantine_table_path_dev: '/mnt/dlt/supply_chain/bronze/'
+              silver_transformation_json_dev : "dbfs:/FileStore/"
+              volume_path: /Volumes/${var.edp_ops_catalog}/edp_ops/bronze_vol/${var.mfl_wms_schema}/
+              combined_json_file_name: all_countries/aus_bronze_onboarding.json
+
+        - task_key: prepare_ddl_wms_${var.wms_aus_schema}
+          job_cluster_key: job_cluster
+          depends_on:
+            - task_key: prepare_onboarding_json_${var.wms_aus_schema}
+          notebook_task:
+              notebook_path: ../src/edp_bronze_json_ddl_wms.ipynb
+              base_parameters:
+                directory: /Volumes/edp_ops_dev/edp_ops/bronze_vol/wms/${var.wms_aus_schema}
+                source_path_dev: /mnt/landing/WMS/${var.wms_aus_schema}/PARQUET/
+                DDL_file_path: '/dbfs/FileStore/DDL/'
+
+        - task_key: prepare_onboarding_json_${var.wms_can_schema}
+          job_cluster_key: job_cluster
+          depends_on:
+            - task_key: prepare_onboarding_json_${var.wms_aus_schema}
+          notebook_task:
+            notebook_path: ../src/prepare_onboarding_json_wms_load.ipynb
+            base_parameters:
+              source_path_dev: /mnt/landing/WMS/${var.wms_can_schema}/PARQUET/
+              bronze_table_path_dev: '/mnt/dlt/supply_chain/bronze/'
+              source_schema_path: 'dbfs:/FileStore/DDL/'
+              silver_table_path_dev: '/mnt/mccain/supply_chain/silver/'
+              filestore: 'dbfs:/FileStore/'
+              DDL_file_path: '/dbfs/FileStore/DDL/'
+              bronze_database: ${var.wms_can_schema}
+              bronze_data_quality_expectations_json_dev: 'dbfs:/FileStore/'
+              bronze_data_quality_expectations_json_prod: 'dbfs:/FileStore'
+              bronze_table_path_prod: '/mnt/dlt/supply_chain/bronze/'
+              bronze_quarantine_table_path_prod: '/mnt/dlt/supply_chain/bronze/'
+              bronze_quarantine_table_path_dev: '/mnt/dlt/supply_chain/bronze/'
+              silver_transformation_json_dev : "dbfs:/FileStore/"
+              volume_path: /Volumes/${var.edp_ops_catalog}/edp_ops/bronze_vol/${var.mfl_wms_schema}/
+              combined_json_file_name: all_countries/can_bronze_onboarding.json
+
+        - task_key: prepare_ddl_wms_${var.wms_can_schema}
+          job_cluster_key: job_cluster
+          depends_on:
+            - task_key: prepare_onboarding_json_${var.wms_can_schema}
+          notebook_task:
+              notebook_path: ../src/edp_bronze_json_ddl_wms.ipynb
+              base_parameters:
+                directory: /Volumes/edp_ops_dev/edp_ops/bronze_vol/wms/${var.wms_can_schema}
+                source_path_dev: /mnt/landing/WMS/${var.wms_can_schema}/PARQUET/
+                DDL_file_path: '/dbfs/FileStore/DDL/'
+
+        - task_key: prepare_onboarding_json_${var.wms_col_schema}
+          job_cluster_key: job_cluster
+          depends_on:
+            - task_key: prepare_onboarding_json_${var.wms_can_schema}
+          notebook_task:
+            notebook_path: ../src/prepare_onboarding_json_wms_load.ipynb
+            base_parameters:
+              source_path_dev: /mnt/landing/WMS/${var.wms_col_schema}/PARQUET/
+              bronze_table_path_dev: '/mnt/dlt/supply_chain/bronze/'
+              source_schema_path: 'dbfs:/FileStore/DDL/'
+              silver_table_path_dev: '/mnt/mccain/supply_chain/silver/'
+              filestore: 'dbfs:/FileStore/'
+              DDL_file_path: '/dbfs/FileStore/DDL/'
+              bronze_database: ${var.wms_col_schema}
+              bronze_data_quality_expectations_json_dev: 'dbfs:/FileStore/'
+              bronze_data_quality_expectations_json_prod: 'dbfs:/FileStore'
+              bronze_table_path_prod: '/mnt/dlt/supply_chain/bronze/'
+              bronze_quarantine_table_path_prod: '/mnt/dlt/supply_chain/bronze/'
+              bronze_quarantine_table_path_dev: '/mnt/dlt/supply_chain/bronze/'
+              silver_transformation_json_dev : "dbfs:/FileStore/"
+              volume_path: /Volumes/${var.edp_ops_catalog}/edp_ops/bronze_vol/${var.mfl_wms_schema}/
+              combined_json_file_name: all_countries/col_bronze_onboarding.json
+
+        - task_key: prepare_ddl_wms_${var.wms_col_schema}
+          job_cluster_key: job_cluster
+          depends_on:
+            - task_key: prepare_onboarding_json_${var.wms_col_schema}
+          notebook_task:
+              notebook_path: ../src/edp_bronze_json_ddl_wms.ipynb
+              base_parameters:
+                directory: /Volumes/edp_ops_dev/edp_ops/bronze_vol/wms/${var.wms_col_schema}
+                source_path_dev: /mnt/landing/WMS/${var.wms_col_schema}/PARQUET/
+                DDL_file_path: '/dbfs/FileStore/DDL/'
+
+        - task_key: prepare_onboarding_json_${var.wms_mfe_schema}
+          job_cluster_key: job_cluster
+          depends_on:
+            - task_key: prepare_onboarding_json_${var.wms_col_schema}
+          notebook_task:
+            notebook_path: ../src/prepare_onboarding_json_wms_load.ipynb
+            base_parameters:
+              source_path_dev: /mnt/landing/WMS/${var.wms_mfe_schema}/PARQUET/
+              bronze_table_path_dev: '/mnt/dlt/supply_chain/bronze/'
+              source_schema_path: 'dbfs:/FileStore/DDL/'
+              silver_table_path_dev: '/mnt/mccain/supply_chain/silver/'
+              filestore: 'dbfs:/FileStore/'
+              DDL_file_path: '/dbfs/FileStore/DDL/'
+              bronze_database: ${var.wms_mfe_schema}
+              bronze_data_quality_expectations_json_dev: 'dbfs:/FileStore/'
+              bronze_data_quality_expectations_json_prod: 'dbfs:/FileStore'
+              bronze_table_path_prod: '/mnt/dlt/supply_chain/bronze/'
+              bronze_quarantine_table_path_prod: '/mnt/dlt/supply_chain/bronze/'
+              bronze_quarantine_table_path_dev: '/mnt/dlt/supply_chain/bronze/'
+              silver_transformation_json_dev : "dbfs:/FileStore/"
+              volume_path: /Volumes/${var.edp_ops_catalog}/edp_ops/bronze_vol/${var.mfl_wms_schema}/
+              combined_json_file_name: all_countries/mfe_bronze_onboarding.json
+
+        - task_key: prepare_ddl_wms_${var.wms_mfe_schema}
+          job_cluster_key: job_cluster
+          depends_on:
+            - task_key: prepare_onboarding_json_${var.wms_mfe_schema}
+          notebook_task:
+              notebook_path: ../src/edp_bronze_json_ddl_wms.ipynb
+              base_parameters:
+                directory: /Volumes/edp_ops_dev/edp_ops/bronze_vol/wms/${var.wms_mfe_schema}
+                source_path_dev: /mnt/landing/WMS/${var.wms_mfe_schema}/PARQUET/
+                DDL_file_path: '/dbfs/FileStore/DDL/'
+
+        - task_key: prepare_onboarding_json_${var.wms_nzl_schema}
+          job_cluster_key: job_cluster
+          depends_on:
+            - task_key: prepare_onboarding_json_${var.wms_mfe_schema}
+          notebook_task:
+            notebook_path: ../src/prepare_onboarding_json_wms_load.ipynb
+            base_parameters:
+              source_path_dev: /mnt/landing/WMS/${var.wms_nzl_schema}/PARQUET/
+              bronze_table_path_dev: '/mnt/dlt/supply_chain/bronze/'
+              source_schema_path: 'dbfs:/FileStore/DDL/'
+              silver_table_path_dev: '/mnt/mccain/supply_chain/silver/'
+              filestore: 'dbfs:/FileStore/'
+              DDL_file_path: '/dbfs/FileStore/DDL/'
+              bronze_database: ${var.wms_nzl_schema}
+              bronze_data_quality_expectations_json_dev: 'dbfs:/FileStore/'
+              bronze_data_quality_expectations_json_prod: 'dbfs:/FileStore'
+              bronze_table_path_prod: '/mnt/dlt/supply_chain/bronze/'
+              bronze_quarantine_table_path_prod: '/mnt/dlt/supply_chain/bronze/'
+              bronze_quarantine_table_path_dev: '/mnt/dlt/supply_chain/bronze/'
+              silver_transformation_json_dev : "dbfs:/FileStore/"
+              volume_path: /Volumes/${var.edp_ops_catalog}/edp_ops/bronze_vol/${var.mfl_wms_schema}/
+              combined_json_file_name: all_countries/nzl_bronze_onboarding.json
+
+        - task_key: prepare_ddl_wms_${var.wms_nzl_schema}
+          job_cluster_key: job_cluster
+          depends_on:
+            - task_key: prepare_onboarding_json_${var.wms_nzl_schema}
+          notebook_task:
+              notebook_path: ../src/edp_bronze_json_ddl_wms.ipynb
+              base_parameters:
+                directory: /Volumes/edp_ops_dev/edp_ops/bronze_vol/wms/${var.wms_nzl_schema}
+                source_path_dev: /mnt/landing/WMS/${var.wms_nzl_schema}/PARQUET/
+                DDL_file_path: '/dbfs/FileStore/DDL/'
+
+        - task_key: prepare_onboarding_json_${var.wms_uk_schema}
+          job_cluster_key: job_cluster
+          depends_on:
+            - task_key: prepare_onboarding_json_${var.wms_nzl_schema}
+          notebook_task:
+            notebook_path: ../src/prepare_onboarding_json_wms_load.ipynb
+            base_parameters:
+              source_path_dev: /mnt/landing/WMS/${var.wms_uk_schema}/PARQUET/
+              bronze_table_path_dev: '/mnt/dlt/supply_chain/bronze/'
+              source_schema_path: 'dbfs:/FileStore/DDL/'
+              silver_table_path_dev: '/mnt/mccain/supply_chain/silver/'
+              filestore: 'dbfs:/FileStore/'
+              DDL_file_path: '/dbfs/FileStore/DDL/'
+              bronze_database: ${var.wms_uk_schema}
+              bronze_data_quality_expectations_json_dev: 'dbfs:/FileStore/'
+              bronze_data_quality_expectations_json_prod: 'dbfs:/FileStore'
+              bronze_table_path_prod: '/mnt/dlt/supply_chain/bronze/'
+              bronze_quarantine_table_path_prod: '/mnt/dlt/supply_chain/bronze/'
+              bronze_quarantine_table_path_dev: '/mnt/dlt/supply_chain/bronze/'
+              silver_transformation_json_dev : "dbfs:/FileStore/"
+              volume_path: /Volumes/${var.edp_ops_catalog}/edp_ops/bronze_vol/${var.mfl_wms_schema}/
+              combined_json_file_name: all_countries/uk_bronze_onboarding.json
+
+        - task_key: prepare_ddl_wms_${var.wms_uk_schema}
+          job_cluster_key: job_cluster
+          depends_on:
+            - task_key: prepare_onboarding_json_${var.wms_uk_schema}
+          notebook_task:
+              notebook_path: ../src/edp_bronze_json_ddl_wms.ipynb
+              base_parameters:
+                directory: /Volumes/edp_ops_dev/edp_ops/bronze_vol/wms/${var.wms_uk_schema}
+                source_path_dev: /mnt/landing/WMS/${var.wms_uk_schema}/PARQUET/
+                DDL_file_path: '/dbfs/FileStore/DDL/'
+
+        - task_key: prepare_onboarding_json_${var.wms_usa_schema}
+          job_cluster_key: job_cluster
+          depends_on:
+            - task_key: prepare_onboarding_json_${var.wms_uk_schema}
+          notebook_task:
+            notebook_path: ../src/prepare_onboarding_json_wms_load.ipynb
+            base_parameters:
+              source_path_dev: /mnt/landing/WMS/${var.wms_usa_schema}/PARQUET/
+              bronze_table_path_dev: '/mnt/dlt/supply_chain/bronze/'
+              source_schema_path: 'dbfs:/FileStore/DDL/'
+              silver_table_path_dev: '/mnt/mccain/supply_chain/silver/'
+              filestore: 'dbfs:/FileStore/'
+              DDL_file_path: '/dbfs/FileStore/DDL/'
+              bronze_database: ${var.wms_usa_schema}
+              bronze_data_quality_expectations_json_dev: 'dbfs:/FileStore/'
+              bronze_data_quality_expectations_json_prod: 'dbfs:/FileStore'
+              bronze_table_path_prod: '/mnt/dlt/supply_chain/bronze/'
+              bronze_quarantine_table_path_prod: '/mnt/dlt/supply_chain/bronze/'
+              bronze_quarantine_table_path_dev: '/mnt/dlt/supply_chain/bronze/'
+              silver_transformation_json_dev : "dbfs:/FileStore/"
+              volume_path: /Volumes/${var.edp_ops_catalog}/edp_ops/bronze_vol/${var.mfl_wms_schema}/
+              combined_json_file_name: all_countries/usa_bronze_onboarding.json
+
+        - task_key: prepare_ddl_wms_${var.wms_usa_schema}
+          job_cluster_key: job_cluster
+          depends_on:
+            - task_key: prepare_onboarding_json_${var.wms_usa_schema}
+          notebook_task:
+              notebook_path: ../src/edp_bronze_json_ddl_wms.ipynb
+              base_parameters:
+                directory: /Volumes/edp_ops_dev/edp_ops/bronze_vol/wms/${var.wms_usa_schema}
+                source_path_dev: /mnt/landing/WMS/${var.wms_usa_schema}/PARQUET/
+                DDL_file_path: '/dbfs/FileStore/DDL/'
+
+        - task_key: prepare_onboarding_json_${var.wms_pol_schema}
+          job_cluster_key: job_cluster
+          depends_on:
+            - task_key: prepare_onboarding_json_${var.wms_usa_schema}
+          notebook_task:
+            notebook_path: ../src/prepare_onboarding_json_wms_load.ipynb
+            base_parameters:
+              source_path_dev: /mnt/landing/WMS/${var.wms_pol_schema}/PARQUET/
+              bronze_table_path_dev: '/mnt/dlt/supply_chain/bronze/'
+              source_schema_path: 'dbfs:/FileStore/DDL/'
+              silver_table_path_dev: '/mnt/mccain/supply_chain/silver/'
+              filestore: 'dbfs:/FileStore/'
+              DDL_file_path: '/dbfs/FileStore/DDL/'
+              bronze_database: ${var.wms_pol_schema}
+              bronze_data_quality_expectations_json_dev: 'dbfs:/FileStore/'
+              bronze_data_quality_expectations_json_prod: 'dbfs:/FileStore'
+              bronze_table_path_prod: '/mnt/dlt/supply_chain/bronze/'
+              bronze_quarantine_table_path_prod: '/mnt/dlt/supply_chain/bronze/'
+              bronze_quarantine_table_path_dev: '/mnt/dlt/supply_chain/bronze/'
+              silver_transformation_json_dev : "dbfs:/FileStore/"
+              volume_path: /Volumes/${var.edp_ops_catalog}/edp_ops/bronze_vol/${var.mfl_wms_schema}/
+              combined_json_file_name: all_countries/pol_bronze_onboarding.json
+
+        - task_key: prepare_ddl_wms_${var.wms_pol_schema}
+          job_cluster_key: job_cluster
+          depends_on:
+            - task_key: prepare_onboarding_json_${var.wms_pol_schema}
+          notebook_task:
+              notebook_path: ../src/edp_bronze_json_ddl_wms.ipynb
+              base_parameters:
+                directory: /Volumes/edp_ops_dev/edp_ops/bronze_vol/wms/${var.wms_pol_schema}
+                source_path_dev: /mnt/landing/WMS/${var.wms_pol_schema}/PARQUET/
+                DDL_file_path: '/dbfs/FileStore/DDL/'
+
+        - task_key: prepare_onboarding_json_${var.mfl_wms_schema}
+          job_cluster_key: job_cluster
+          depends_on:
+            - task_key: prepare_onboarding_json_${var.wms_pol_schema}
+          notebook_task:
+            notebook_path: ../src/prepare_onboarding_json_wms.ipynb
+            base_parameters:
+              source_path_dev: /mnt/landing/WMS/${var.wms_pol_schema}/PARQUET/
+              bronze_table_path_dev: '/mnt/dlt/supply_chain/bronze/'
+              source_schema_path: 'dbfs:/FileStore/DDL/'
+              silver_table_path_dev: '/mnt/mccain/supply_chain/silver/'
+              filestore: 'dbfs:/FileStore/'
+              DDL_file_path: '/dbfs/FileStore/DDL/'
+              bronze_database: ${var.mfl_wms_schema}/all_countries
+              bronze_data_quality_expectations_json_dev: 'dbfs:/FileStore/'
+              bronze_data_quality_expectations_json_prod: 'dbfs:/FileStore'
+              bronze_table_path_prod: '/mnt/dlt/supply_chain/bronze/'
+              bronze_quarantine_table_path_prod: '/mnt/dlt/supply_chain/bronze/'
+              bronze_quarantine_table_path_dev: '/mnt/dlt/supply_chain/bronze/'
+              silver_transformation_json_dev : "dbfs:/FileStore/"
+              volume_path: /Volumes/${var.edp_ops_catalog}/edp_ops/bronze_vol/
+              combined_json_file_name: wms_bronze_onboarding.json
+
+        - task_key: execute_onboarding
+          job_cluster_key: job_cluster
+          depends_on:
+            - task_key: prepare_onboarding_json_${var.mfl_wms_schema}
+          notebook_task: 
+            notebook_path: ../src/bronze_onboarding.ipynb
+            base_parameters: 
+              database: ${var.edp_ops_catalog}.${var.edp_ops_schema}
+              onboarding_file_path: /Volumes/${var.edp_ops_catalog}/edp_ops/bronze_vol/${var.mfl_wms_schema}_bronze_onboarding.json
+              bronze_dataflowspec_table: ${var.bronze_dataflowspec_table}
+              silver_dataflowspec_table: ${var.silver_dataflowspec_table}
+              silver_dataflowspec_path: "dbfs:/onboarding_tables_cdc/silver"
+              bronze_dataflowspec_path: "dbfs:/onboarding_tables_cdc/bronze"
+              overwrite: "False"
+              env: ${var.environment}
+              version: "v1"
+              import_author: "Blackstraw"
+
+        - task_key: wms_dlt_pipeline
+          depends_on:
+            - task_key: execute_onboarding
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.wms_bronze_pipeline.id}
+      job_clusters:
+        - job_cluster_key: job_cluster
+          new_cluster:
+            spark_version: 14.3.x-scala2.12
+            node_type_id: Standard_D16a_v4
+            autoscale:
+                min_workers: 1
+                max_workers: 4             
+               
+
