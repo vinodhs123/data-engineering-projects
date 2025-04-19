@@ -11,3 +11,4 @@ print(eid,ename,esal)
 print("Emp id=%d , Emp name=%s , Emp sal=%g"%(eid,ename,esal))
 
 print("Emp id={0} Emp name={1} Emp sal={2}".format(eid,ename,esal))
+print("DONE")
